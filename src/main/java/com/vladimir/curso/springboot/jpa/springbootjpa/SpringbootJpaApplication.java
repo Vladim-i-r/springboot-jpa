@@ -1,6 +1,7 @@
 package com.vladimir.curso.springboot.jpa.springbootjpa;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,8 +23,36 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 
 	@Override
 	public void run(String... args) throws Exception {
-		List<Person> persons = (List<Person>) repository.findAll();
+		findOne();
+	}
+
+	public void findOne(){
+		// Person person = null;
+		// Optional<Person> optionalPerson = repository.findById(7L);
+		// if (optionalPerson.isPresent()) {
+		// 	person = optionalPerson.get();
+		// }
+		// System.out.println(person);
+
+		repository.findById(1L).ifPresent(person -> { System.out.println(person); });
+		//repository.findById(1L).ifPresent(System.out::println);								//Hace lo mismo pero abreviado 
+	}									
+
+	public void list(){
+		//// List<Person> persons = (List<Person>) repository.findAll();
+		////List<Person> persons = (List<Person>) repository.findByProgLanguage("Java");
+		//// List<Person> persons = (List<Person>) repository.buscarByProgLanguage("Java", "Andres");
+		List<Person> persons = (List<Person>) repository.findByProgLanguageAndName("Java", "Andres");
+
 		persons.stream().forEach(person -> {  System.out.println(person);  });
+		
+		List<Object[]> personsData = (List<Object[]>) repository.obtenerPersonData();  //? Esto cuando solo se requieren ciertos atributos
+		List<Object[]> personsData2= (List<Object[]>) repository.obtenerPersonData("Java");  //? Override con 1 atributo
+		List<Object[]> personsData3 = (List<Object[]>) repository.obtenerPersonData("Java", "Andres");  // ?  Override con 2 atributos
+
+		personsData.stream().forEach(person -> {  System.out.println(person[0] + " es experto en " + person[1]);  }); System.out.println("");
+		personsData2.stream().forEach(person -> {  System.out.println(person[0] + " es experto en " + person[1]);  }); System.out.println("");
+		personsData3.stream().forEach(person -> {  System.out.println(person[0] + " es experto en " + person[1]);  });
 	}
 
 }
