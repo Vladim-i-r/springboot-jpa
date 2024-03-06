@@ -29,6 +29,7 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 	public void findOne(){
 		// Person person = null;
 		// Optional<Person> optionalPerson = repository.findById(7L);
+		// //if (!optionalPerson.isEmpty) {
 		// if (optionalPerson.isPresent()) {
 		// 	person = optionalPerson.get();
 		// }
@@ -36,6 +37,10 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 
 		repository.findById(1L).ifPresent(person -> { System.out.println(person); });
 		//repository.findById(1L).ifPresent(System.out::println);								//Hace lo mismo pero abreviado 
+		repository.findOne(1L).ifPresent(person -> { System.out.println(person); });
+		repository.findOneName("Pepe").ifPresent(person -> { System.out.println(person); });
+		repository.findByName("Josefa").ifPresent(person -> { System.out.println(person); });
+		repository.findOneNameLike("ri").ifPresent(person -> { System.out.println(person); });
 	}									
 
 	public void list(){
