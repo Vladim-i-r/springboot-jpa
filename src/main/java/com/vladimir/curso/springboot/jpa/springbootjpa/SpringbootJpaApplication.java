@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vladimir.curso.springboot.jpa.springbootjpa.dto.PersonDto;
 import com.vladimir.curso.springboot.jpa.springbootjpa.entities.Person;
 import com.vladimir.curso.springboot.jpa.springbootjpa.repos.PersonRepository;
 
@@ -32,7 +33,8 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		//delete();
 		//delete2();
 		// personalizedQueries();
-		personalizedQueries2();
+		//personalizedQueries2();
+		personalizedQueriesDistinct();
 	}
 
 	@Transactional(readOnly = true)											//? Es una transaccion pero unicamente de consulta
@@ -192,5 +194,29 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		System.out.println("============CONSULTA QUE POBLA Y DEVUELVE PBJETO ENTITY DE UNA INSTANCIA PERSONALIZADA===========");
 		List<Person> persons = personRepository.findAllCustomObjPerson();
 		persons.forEach(System.out::println);
+
+		System.out.println("=============CONSULTA QUE POBLA Y DEVULEVE OBJETO DTO DE UNA CLASE PERSONALIZADA===========");
+		List<PersonDto> personsDto = personRepository.findAllPersonDto();
+		personsDto.forEach(System.out::println);
+		
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesDistinct(){
+		System.out.println("========CONSULTAS CON NOMBRES DE PERSONAS========");
+		List<String> names = personRepository.findAllNames();
+		names.forEach(System.out::println);
+		
+		System.out.println("========CONSULTAS CON NOMBRES UNICOS DE PERSONAS========");
+		List<String> namesDN = personRepository.findAllNamesDistinctName();
+		namesDN.forEach(System.out::println);
+
+		System.out.println("========CONSULTAS CON LENGUAJES UNICOS ========");
+		List<String> namesDP = personRepository.findAllNamesDistinctProg();
+		namesDP.forEach(System.out::println);
+
+		System.out.println("========CONSULTAS CON TOTAL LENGUAJES UNICOS ========");
+		Long namesCount = personRepository.findAllNamesCountDistinctProg();
+		System.out.println("El total de lenguajes de programacion son: "+namesCount);
 	}
 }

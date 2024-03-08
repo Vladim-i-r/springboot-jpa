@@ -3,6 +3,7 @@ package com.vladimir.curso.springboot.jpa.springbootjpa.repos;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import com.vladimir.curso.springboot.jpa.springbootjpa.dto.PersonDto;
 import com.vladimir.curso.springboot.jpa.springbootjpa.entities.Person;
 import java.util.List;
 import java.util.Optional;
@@ -52,13 +53,27 @@ public interface PersonRepository extends CrudRepository<Person, Long> { // El <
     Optional<Object> obtenerFullPersonDataById(Long id);
     //Object obtenerFullPersonDataById(Long id);
     
-    @Query("select p.id, p.name, p.lastname, p.progLanguage from Person p")                   // ? Esto cuando solo se requieren ciertos atributos
+    @Query("select p.id, p.name, p.lastname, p.progLanguage from Person p")                   // ? JPQL
     List<Object[]> obtenerPersonDataList();
 
-    @Query("select p, p.progLanguage from Person p")                   // ? Esto cuando solo se requieren ciertos atributos
+    @Query("select p, p.progLanguage from Person p")                   // ? JPQL 
     List<Object[]> findAllMixPerson();
 
-    @Query("select new Person(p.name, p.lastname) from Person p")                     //? El constructor de 2 atributos debe existir 
+    @Query("select new Person(p.name, p.lastname) from Person p")                     //? Instanciando un contructor con 2 atributos
     List<Person> findAllCustomObjPerson();
     
+    @Query("select new com.vladimir.curso.springboot.jpa.springbootjpa.dto.PersonDto(p.name, p.lastname) from Person p")          //? Cuando es DTO se le debe poner la ruta ya que no es Entity 
+    List<PersonDto> findAllPersonDto();
+
+    @Query("select p.name from Person p")
+    List<String> findAllNames();
+
+    @Query("select distinct(p.name) from Person p")
+    List<String> findAllNamesDistinctName();
+
+    @Query("select distinct(p.progLanguage) from Person p")
+    List<String> findAllNamesDistinctProg();
+
+    @Query("select count(distinct(p.progLanguage)) from Person p")
+    Long findAllNamesCountDistinctProg();
 }
