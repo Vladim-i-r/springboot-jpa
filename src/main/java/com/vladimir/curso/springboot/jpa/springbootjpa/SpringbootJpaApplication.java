@@ -27,10 +27,12 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 	@Override
 	public void run(String... args) throws Exception {
 		//findOne();
-		create();
+		//create();
 		//update();
 		//delete();
 		//delete2();
+		// personalizedQueries();
+		personalizedQueries2();
 	}
 
 	@Transactional(readOnly = true)											//? Es una transaccion pero unicamente de consulta
@@ -141,5 +143,54 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		scanner.close();
 	}
 
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries(){
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("========== CONSULTA DE NOMBRE POR ID =================");
+		System.out.println("Ingrese el ID: ");
+		Long id = scanner.nextLong();
+
+		System.out.println("MOSTRANDO SOLO EL NOMBRE");
+		String name = personRepository.getNameById(id);
+		System.out.println(name);
+		
+		System.out.println("MOSTRANDO EL ID");
+		Long idDb = personRepository.getIdById(id);
+		System.out.println(idDb);
+		
+		System.out.println("MOSTRANDO SOLO EL NOMBRE COMPLETO");
+		String fullname = personRepository.getFullnameById(id);
+		System.out.println(fullname);
+
+		System.out.println("=============CONSULTA POR CAMPOS PERSONALIZADOS POR ID===========");
+		//// Object[] personReg = (Object[]) personRepository.obtenerFullPersonDataById(id);
+		//// System.out.println("id=" + personReg[0] + ", nombre=" + personReg[1] + ", apellido=" + personReg[2] + ", lenguaje=" + personReg[3]);
+		Optional<Object> optObj = personRepository.obtenerFullPersonDataById(id);
+		if (optObj.isPresent()) {
+			Object[] personReg = (Object[]) optObj.orElseThrow();
+			System.out.println("id=" + personReg[0] + ", nombre=" + personReg[1] + ", apellido=" + personReg[2] + ", lenguaje=" + personReg[3]);
+		} 
+
+		System.out.println("=============CONSULTA POR CAMPOS PERSONALIZADOS EN LISTA===========");
+		List<Object[]> regs = personRepository.obtenerPersonDataList();
+		regs.forEach(reg -> System.out.println("id=" + reg[0] + ", nombre=" + reg[1] + ", apellido=" + reg[2] + ", lenguaje=" + reg[3]));
+
+
+		scanner.close();
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries2(){
+		System.out.println("=============CONSULTA POR OBJETO PERSONA Y OTRO ELEMENTO===========");
+		List<Object[]> personsRegs =  personRepository.findAllMixPerson();
+		personsRegs.forEach(regs -> {
+			System.out.println("progLanguage=" + regs[1] + ", person=" + regs[0]);
+		});
+
+		System.out.println("============CONSULTA QUE POBLA Y DEVUELVE PBJETO ENTITY DE UNA INSTANCIA PERSONALIZADA===========");
+		List<Person> persons = personRepository.findAllCustomObjPerson();
+		persons.forEach(System.out::println);
+	}
 }
- 

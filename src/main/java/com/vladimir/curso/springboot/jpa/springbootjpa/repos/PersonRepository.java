@@ -38,5 +38,27 @@ public interface PersonRepository extends CrudRepository<Person, Long> { // El <
     Optional<Person> findOneNameLike(String name);
     
     Optional<Person> findByNameContaining(String name);                         // * CRUD
+
+    @Query("select p.name from Person p where p.id=?1")
+    String getNameById(Long id);                                             // Personalizado
+
+    @Query("select p.id from Person p where p.id=?1")                       // Personalizado
+    Long getIdById(Long id); 
+
+    @Query("select concat(p.name, ' ', p.lastname) as Fullname from Person p where p.id=?1")    // Personalizado
+    String getFullnameById(Long id); 
+
+    @Query("select p.id, p.name, p.lastname, p.progLanguage from Person p where p.id=?1")                   // Personalizado          
+    Optional<Object> obtenerFullPersonDataById(Long id);
+    //Object obtenerFullPersonDataById(Long id);
+    
+    @Query("select p.id, p.name, p.lastname, p.progLanguage from Person p")                   // ? Esto cuando solo se requieren ciertos atributos
+    List<Object[]> obtenerPersonDataList();
+
+    @Query("select p, p.progLanguage from Person p")                   // ? Esto cuando solo se requieren ciertos atributos
+    List<Object[]> findAllMixPerson();
+
+    @Query("select new Person(p.name, p.lastname) from Person p")                     //? El constructor de 2 atributos debe existir 
+    List<Person> findAllCustomObjPerson();
     
 }

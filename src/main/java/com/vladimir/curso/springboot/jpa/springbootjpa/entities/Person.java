@@ -23,6 +23,13 @@ public class Person {
 
     public Person() {                               //? Este constructor lo usa JPA/Hibernate para poblar la tabla
     }
+    
+
+    public Person(String name, String lastname) {
+        this.name = name;
+        this.lastname = lastname;
+    }
+
 
     public Person(Long id, String name, String lastname, String progLanguage) {  //? Este constructor nos funciona a nosotros pero siempre que se crea este, se debera crear el vacio 
         this.id = id;
