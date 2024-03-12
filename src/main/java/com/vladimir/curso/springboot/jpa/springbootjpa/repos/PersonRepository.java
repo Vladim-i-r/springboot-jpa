@@ -76,4 +76,15 @@ public interface PersonRepository extends CrudRepository<Person, Long> { // El <
 
     @Query("select count(distinct(p.progLanguage)) from Person p")
     Long findAllNamesCountDistinctProg();
+
+    @Query("select p from Person p where p.id between 2 and 5")
+    List<Person> findAllByIdBetween();
+
+    ////@Query("select p from Person p where p.name between 'J' and 'Q'")  //Aqui la J no se incluye 
+    @Query("select p from Person p where p.name between ?1 and ?2")  //Aqui la J no se incluye 
+    List<Person> findAllByIdBetweenName(String c1, String c2);
+
+    List<Person> findByIdBetween(Long id1, Long id2);               // CRUD
+
+    List<Person> findByNameBetween(String name1, String name2);     // CRUD
 }

@@ -34,7 +34,8 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		//delete2();
 		// personalizedQueries();
 		//personalizedQueries2();
-		personalizedQueriesDistinct();
+		//personalizedQueriesDistinct();
+		personalizedQueriesBetween();
 	}
 
 	@Transactional(readOnly = true)											//? Es una transaccion pero unicamente de consulta
@@ -218,5 +219,26 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		System.out.println("========CONSULTAS CON TOTAL LENGUAJES UNICOS ========");
 		Long namesCount = personRepository.findAllNamesCountDistinctProg();
 		System.out.println("El total de lenguajes de programacion son: "+namesCount);
+	}
+
+	public void personalizedQueriesBetween(){
+		System.out.println("========CONSULTAS POR RANGOS========");
+		System.out.println("========POR ID CUSTOM========");
+		List<Person> persons = personRepository.findAllByIdBetween();
+		persons.forEach(System.out::println);
+
+		System.out.println("========POR NOMBRE CUSTOM ========");
+		List<Person> personsN = personRepository.findAllByIdBetweenName("J", "Q");
+		personsN.forEach(System.out::println);
+
+		System.out.println("========POR ID   CRUD========");
+		List<Person> personsB = personRepository.findByIdBetween(2L,5L);
+		personsB.forEach(System.out::println);
+
+		System.out.println("========POR NOMBRE    CRUD========");
+		List<Person> personsc = personRepository.findByNameBetween("J", "Q");
+		personsc.forEach(System.out::println);
+
+
 	}
 }
