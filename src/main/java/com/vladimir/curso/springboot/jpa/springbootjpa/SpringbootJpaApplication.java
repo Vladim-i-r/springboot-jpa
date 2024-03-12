@@ -30,7 +30,7 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 	public void run(String... args) throws Exception {
 		//findOne();
 		//create();
-		//update();
+		update();
 		//delete();
 		//delete2();
 		// personalizedQueries();
@@ -38,7 +38,7 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		//personalizedQueriesDistinct();
 		//personalizedQueriesBetweenOrder();
 		//queriesFunctionAgregation();
-		subQueries();
+		//subQueries();
 	}
 
 	@Transactional(readOnly = true)											//? Es una transaccion pero unicamente de consulta
