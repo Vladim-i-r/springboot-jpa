@@ -1,14 +1,11 @@
 package com.vladimir.curso.springboot.jpa.springbootjpa.entities;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity // Peristencia
@@ -25,11 +22,8 @@ public class Person {
     @Column(name="programming_language")
     private String progLanguage;
 
-    @Column(name="created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name="updated_at")
-    private LocalDateTime updatedAt;
+    @Embedded
+    private Audit audit = new Audit();                            // Se agrega embedded para reutilizar el codigo de Audit, de una clase Embeddable - incorporable, integrable
 
     public Person() {                               //? Este constructor lo usa JPA/Hibernate para poblar la tabla
     }
@@ -47,19 +41,6 @@ public class Person {
         this.lastname = lastname;
         this.progLanguage = progLanguage;
     }
-
-    @PrePersist
-    public void prePersist(){
-        System.out.println("Evento del ciclo de vida del entity, pre-persist");
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate(){
-        System.out.println("Evento del ciclo de vida del objeto entity pre-update");
-        this.updatedAt = LocalDateTime.now();
-    }
-
 
     public Long getId() {
         return id;
@@ -86,9 +67,10 @@ public class Person {
         this.progLanguage = progLanguage;
     }
 
+
     @Override
     public String toString() {
-        return "[id=" + id + ", name=" + name + ", lastname=" + lastname + ", progLanguage=" + progLanguage + ", created at=" + createdAt + ", updated at= " + updatedAt + "]";
+        return "[id=" + id + ", name=" + name + ", lastname=" + lastname + ", progLanguage=" + progLanguage + ", created at=" + audit.getCreatedAt() + ", updated at= " + audit.getUpdatedAt() + "]";
     }
 
     
