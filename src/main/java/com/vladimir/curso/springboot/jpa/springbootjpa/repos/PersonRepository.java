@@ -77,14 +77,59 @@ public interface PersonRepository extends CrudRepository<Person, Long> { // El <
     @Query("select count(distinct(p.progLanguage)) from Person p")
     Long findAllNamesCountDistinctProg();
 
-    @Query("select p from Person p where p.id between 2 and 5")
-    List<Person> findAllByIdBetween();
+    @Query("select p from Person p where p.id between 2 and 5 order by p.name desc")
+    List<Person> findAllBetweenId();
 
     ////@Query("select p from Person p where p.name between 'J' and 'Q'")  //Aqui la J no se incluye 
-    @Query("select p from Person p where p.name between ?1 and ?2")  //Aqui la J no se incluye 
-    List<Person> findAllByIdBetweenName(String c1, String c2);
+    @Query("select p from Person p where p.name between ?1 and ?2 order by p.name asc, p.lastname desc")  //Aqui la J no se incluye 
+    List<Person> findAllBetweenName(String c1, String c2);
 
     List<Person> findByIdBetween(Long id1, Long id2);               // CRUD
 
     List<Person> findByNameBetween(String name1, String name2);     // CRUD
+    
+    List<Person> findByIdBetweenOrderByNameAsc(Long id1, Long id2);               // CRUD
+
+    List<Person> findByNameBetweenOrderByNameDescLastnameDesc(String name1, String name2);     // CRUD
+
+    @Query("select p from Person p order by p.name")
+    List<Person> getAllOrdered();
+
+    List<Person> findAllByOrderByNameAsc();                 // CRUD
+
+    @Query("select count(p.name) from Person p")
+    Long getTotalPerson();
+
+    @Query("select min(p.id) from Person p")
+    Long getMinId();
+
+    @Query("select max(p.id) from Person p")
+    Long getMaxId();
+
+    @Query("select p.name, length(p.name) from Person p")
+    public List<Object[]> getPersonNameLength();
+
+    @Query("select min(length(p.name)) from Person p")
+    public Integer getMinLengthName();
+
+    @Query("select max(length(p.name)) from Person p")
+    public Integer getMaxLengthName();
+
+    @Query("select min(p.id), max(p.id), sum(p.id), avg(length(p.name)), count(p.id) from Person p")
+    public Object getResumeAggregationFunction();
+
+    @Query("select p.name, length(p.name) from Person p where length(p.name)=(select min(length(p.name)) from Person p)")  // SUBQUERY
+    public List<Object[]> getShortestName();
+
+    @Query("select p.name, length(p.name) from Person p where length(p.name)=(select max(length(p.name)) from Person p)")  // SUBQUERY
+    public List<Object[]> getLongestName();
+
+    @Query("select p from Person p where p.id=(select max(p.id) from Person p)")
+    public Optional<Person> getLastRegistration();
+
+    @Query("select p from Person p where p.id in (1,2,5)")
+    public List<Person> getPersonByIds();
+
+    @Query("select p from Person p where p.id in ?1")  //not in tambien se puede
+    public List<Person> getPersonByIds2(List<Long> ids);
 }

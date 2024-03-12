@@ -1,5 +1,6 @@
 package com.vladimir.curso.springboot.jpa.springbootjpa;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 //import java.util.Optional;
@@ -35,7 +36,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		// personalizedQueries();
 		//personalizedQueries2();
 		//personalizedQueriesDistinct();
-		personalizedQueriesBetween();
+		//personalizedQueriesBetweenOrder();
+		//queriesFunctionAgregation();
+		subQueries();
 	}
 
 	@Transactional(readOnly = true)											//? Es una transaccion pero unicamente de consulta
@@ -221,14 +224,14 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		System.out.println("El total de lenguajes de programacion son: "+namesCount);
 	}
 
-	public void personalizedQueriesBetween(){
+	public void personalizedQueriesBetweenOrder(){
 		System.out.println("========CONSULTAS POR RANGOS========");
 		System.out.println("========POR ID CUSTOM========");
-		List<Person> persons = personRepository.findAllByIdBetween();
+		List<Person> persons = personRepository.findAllBetweenId();
 		persons.forEach(System.out::println);
 
 		System.out.println("========POR NOMBRE CUSTOM ========");
-		List<Person> personsN = personRepository.findAllByIdBetweenName("J", "Q");
+		List<Person> personsN = personRepository.findAllBetweenName("J", "Q");
 		personsN.forEach(System.out::println);
 
 		System.out.println("========POR ID   CRUD========");
@@ -239,6 +242,82 @@ public class SpringbootJpaApplication implements CommandLineRunner{ // Se implem
 		List<Person> personsc = personRepository.findByNameBetween("J", "Q");
 		personsc.forEach(System.out::println);
 
+		System.out.println("========POR ID   CRUD========");
+		List<Person> personsD = personRepository.findByIdBetweenOrderByNameAsc(2L,5L);
+		personsD.forEach(System.out::println);
+
+		System.out.println("========POR NOMBRE    CRUD========");
+		List<Person> personsF = personRepository.findByNameBetweenOrderByNameDescLastnameDesc("J", "Q");
+		personsF.forEach(System.out::println);
+
+		persons = personRepository.getAllOrdered();
+		persons.forEach(System.out::println);
+	}
+
+	@Transactional(readOnly = true)
+	public void queriesFunctionAgregation(){
+		System.out.println("==========CONSULTA CON EL TOTAL DE REGISTROS DE LA TABLA PERSONA===========");
+		Long count = personRepository.getTotalPerson();
+		System.out.println(count);
+
+		System.out.println("=========CONSULTA CON EL VALOR MINIMO DEL ID=========");
+		Long min = personRepository.getMinId();
+		System.out.println(min);
+		
+		System.out.println("=========CONSULTA CON EL VALOR MINIMO DEL ID=========");
+		Long max = personRepository.getMaxId();
+		System.out.println(max);
+
+		System.out.println("============CONSULTA CON EL NOMBRE Y SU LARGO===========");
+		List<Object[]> regs = personRepository.getPersonNameLength();
+		regs.forEach(reg -> {
+			String name = (String) reg[0];
+			Integer length = (Integer) reg[1];
+			System.out.println("name=" + name + ", lenght=" + length);
+			
+		});
+
+		System.out.println("==========CONSULTA CON EL NOMBRE MAS CORTO =========");
+		Integer minLengthName = personRepository.getMinLengthName();
+		System.out.println(minLengthName);
+
+		System.out.println("==========CONSULTA CON EL NOMBRE MAS LARGO =========");
+		Integer maxLengthName = personRepository.getMaxLengthName();
+		System.out.println(maxLengthName);
+
+		System.out.println("============CONSULTAS RESUMEN DE FUNCIONES DE AGREGACION MIN, MAX, SUM, AVG, COUNT===========");
+		Object[] resumeReg = (Object[]) personRepository.getResumeAggregationFunction();
+		System.out.println("min=" + resumeReg[0] + ", max=" + resumeReg[1] + ", sum=" + resumeReg[2] + ", avg= " + resumeReg[3] + ", count=" + resumeReg[4]);
+	}
+
+	@Transactional(readOnly = true)
+	public void subQueries(){
+		System.out.println("=======CONSULTA POR EL NOMBRE MAS CORTO Y SU LARGO======");
+		List<Object[]> registers = personRepository.getShortestName();
+		registers.forEach(reg -> {
+			String name = (String) reg[0];
+			Integer length = (Integer) reg[1];
+			System.out.println("name=" + name + ", lenght=" + length);
+		});
+
+
+		System.out.println("=======CONSULTA POR EL NOMBRE MAS LARGO Y SU LARGO======");
+		List<Object[]> registerss = personRepository.getLongestName();
+		registerss.forEach(reg -> {
+			String name = (String) reg[0];
+			Integer length = (Integer) reg[1];
+			System.out.println("name=" + name + ", lenght=" + length);
+		});
+
+		System.out.println("=========CONSULTA WHERE IN=========");
+		List<Person> persons = personRepository.getPersonByIds();
+		persons.forEach(System.out::println);
+
+		System.out.println("=========CONSULTA WHERE IN 2=========");
+		List<Person> persons2 = personRepository.getPersonByIds2(Arrays.asList(1L,2L,5L,7L));
+		persons2.forEach(System.out::println);
 
 	}
+
+
 }
